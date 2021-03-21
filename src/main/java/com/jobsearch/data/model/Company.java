@@ -1,15 +1,19 @@
 package com.jobsearch.data.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -49,6 +53,9 @@ public class Company implements Serializable {
 	@JoinColumn(name = "fk_industry")
 	private Industry industry;
 
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "company")
+	private Set<Job> jobs = new HashSet<Job>();
+	
 	public long getId() {
 		return id;
 	}
@@ -81,6 +88,22 @@ public class Company implements Serializable {
 		this.noOfEmployees = noOfEmployees;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Set<Job> getJobs() {
+		return jobs;
+	}
+
+	public void setJobs(Set<Job> jobs) {
+		this.jobs = jobs;
+	}
+
 	public Industry getIndustry() {
 		return industry;
 	}
@@ -90,46 +113,11 @@ public class Company implements Serializable {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((industry == null) ? 0 : industry.hashCode());
-		result = prime * result + ((location == null) ? 0 : location.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + noOfEmployees;
-		return result;
+	public String toString() {
+		return "Company [id=" + id + ", user=" + user + ", name=" + name + ", location=" + location + ", noOfEmployees="
+				+ noOfEmployees + ", industry=" + industry + ", jobs=" + jobs + "]";
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Company other = (Company) obj;
-		if (id != other.id)
-			return false;
-		if (industry == null) {
-			if (other.industry != null)
-				return false;
-		} else if (!industry.equals(other.industry))
-			return false;
-		if (location == null) {
-			if (other.location != null)
-				return false;
-		} else if (!location.equals(other.location))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (noOfEmployees != other.noOfEmployees)
-			return false;
-		return true;
-	}
+	
+	
 
 }

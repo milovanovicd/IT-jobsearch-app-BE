@@ -35,6 +35,15 @@ public class Seniority implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "seniority")
 	private Set<Job> jobs = new HashSet<Job>();
 
+	public Seniority() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Seniority(String description) {
+		super();
+		this.description = description;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -51,13 +60,20 @@ public class Seniority implements Serializable {
 		this.description = description;
 	}
 
+	public Set<Job> getJobs() {
+		return jobs;
+	}
+
+	public void setJobs(Set<Job> jobs) {
+		this.jobs = jobs;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
 		return result;
 	}
 
@@ -77,12 +93,12 @@ public class Seniority implements Serializable {
 			return false;
 		if (id != other.id)
 			return false;
-		if (jobs == null) {
-			if (other.jobs != null)
-				return false;
-		} else if (!jobs.equals(other.jobs))
-			return false;
 		return true;
 	}
 
+
+	@Override
+	public String toString() {
+		return this.description;
+	}
 }

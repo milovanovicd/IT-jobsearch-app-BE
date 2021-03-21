@@ -1,13 +1,13 @@
 package com.jobsearch.data.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,11 +51,15 @@ public class Job implements Serializable {
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "fk_seniority")
 	private Seniority seniority;
+	
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "fk_company")
+	private Company company;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "job_technologies", joinColumns = { @JoinColumn(name = "id_job") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_technology") })
-	private List<Technology> technologies;
+	private List<Technology> technologies = new ArrayList<>();
 
 	public long getId() {
 		return id;
@@ -112,6 +116,14 @@ public class Job implements Serializable {
 	public void setSeniority(Seniority seniority) {
 		this.seniority = seniority;
 	}
+	
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 
 	public List<Technology> getTechnologies() {
 		return technologies;
@@ -125,6 +137,7 @@ public class Job implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + ((deadlineDate == null) ? 0 : deadlineDate.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
@@ -132,7 +145,6 @@ public class Job implements Serializable {
 		result = prime * result + ((position == null) ? 0 : position.hashCode());
 		result = prime * result + ((publishedDate == null) ? 0 : publishedDate.hashCode());
 		result = prime * result + ((seniority == null) ? 0 : seniority.hashCode());
-		result = prime * result + ((technologies == null) ? 0 : technologies.hashCode());
 		return result;
 	}
 
@@ -145,6 +157,11 @@ public class Job implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Job other = (Job) obj;
+		if (company == null) {
+			if (other.company != null)
+				return false;
+		} else if (!company.equals(other.company))
+			return false;
 		if (deadlineDate == null) {
 			if (other.deadlineDate != null)
 				return false;
@@ -177,12 +194,7 @@ public class Job implements Serializable {
 				return false;
 		} else if (!seniority.equals(other.seniority))
 			return false;
-		if (technologies == null) {
-			if (other.technologies != null)
-				return false;
-		} else if (!technologies.equals(other.technologies))
-			return false;
 		return true;
 	}
-	
+
 }

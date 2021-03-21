@@ -70,7 +70,7 @@ public class Candidate implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

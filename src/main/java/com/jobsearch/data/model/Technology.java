@@ -26,6 +26,15 @@ public class Technology implements Serializable {
 
 	@Column(name = "description")
 	private String description;
+	
+	public Technology() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Technology(String description) {
+		super();
+		this.description = description;
+	}
 
 	public long getId() {
 		return id;
@@ -71,4 +80,9 @@ public class Technology implements Serializable {
 		return true;
 	}
 
+
+	@Override
+	public String toString() {
+		return this.description;
+	}
 }

@@ -32,10 +32,17 @@ public class Position implements Serializable{
 	@Column(name = "description")
 	private String description;
 	
-	@OneToMany(fetch = FetchType.EAGER, 
-			cascade = { CascadeType.PERSIST, CascadeType.MERGE }, 
-			mappedBy = "position")
+	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "position")
 	private Set<Job> jobs = new HashSet<Job>();
+
+	public Position() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Position(String description) {
+		super();
+		this.description = description;
+	}
 
 	public long getId() {
 		return id;
@@ -67,7 +74,6 @@ public class Position implements Serializable{
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
 		return result;
 	}
 
@@ -87,12 +93,11 @@ public class Position implements Serializable{
 			return false;
 		if (id != other.id)
 			return false;
-		if (jobs == null) {
-			if (other.jobs != null)
-				return false;
-		} else if (!jobs.equals(other.jobs))
-			return false;
 		return true;
 	}
 	
+	@Override
+	public String toString() {
+		return this.description;
+	}
 }

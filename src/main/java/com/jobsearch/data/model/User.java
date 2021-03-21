@@ -64,11 +64,11 @@ public class User implements UserDetails, Serializable {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", optional = true)
 	private Candidate candidate;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany
 	@JoinTable(name = "user_permission", 
 	joinColumns = { @JoinColumn(name = "id_user") }, 
 	inverseJoinColumns = { @JoinColumn(name = "id_permission") })
-	private List<Permission> permissions;
+	private List<Permission> permissions = new ArrayList<>();
 
 	public List<String> getRoles() {
 		List<String> roles = new ArrayList<String>();
@@ -184,74 +184,5 @@ public class User implements UserDetails, Serializable {
 		this.candidate = candidate;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (accountNonExpired ? 1231 : 1237);
-		result = prime * result + (accountNonLocked ? 1231 : 1237);
-		result = prime * result + ((candidate == null) ? 0 : candidate.hashCode());
-		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + (credentialsNonExpired ? 1231 : 1237);
-		result = prime * result + (enabled ? 1231 : 1237);
-		result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((permissions == null) ? 0 : permissions.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (accountNonExpired != other.accountNonExpired)
-			return false;
-		if (accountNonLocked != other.accountNonLocked)
-			return false;
-		if (candidate == null) {
-			if (other.candidate != null)
-				return false;
-		} else if (!candidate.equals(other.candidate))
-			return false;
-		if (company == null) {
-			if (other.company != null)
-				return false;
-		} else if (!company.equals(other.company))
-			return false;
-		if (credentialsNonExpired != other.credentialsNonExpired)
-			return false;
-		if (enabled != other.enabled)
-			return false;
-		if (fullName == null) {
-			if (other.fullName != null)
-				return false;
-		} else if (!fullName.equals(other.fullName))
-			return false;
-		if (id != other.id)
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (permissions == null) {
-			if (other.permissions != null)
-				return false;
-		} else if (!permissions.equals(other.permissions))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
-			return false;
-		return true;
-	}
 
 }

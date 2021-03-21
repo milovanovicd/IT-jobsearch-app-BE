@@ -64,7 +64,6 @@ public class Industry implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((companies == null) ? 0 : companies.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		return result;
@@ -79,11 +78,6 @@ public class Industry implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Industry other = (Industry) obj;
-		if (companies == null) {
-			if (other.companies != null)
-				return false;
-		} else if (!companies.equals(other.companies))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
