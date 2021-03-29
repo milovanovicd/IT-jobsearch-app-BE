@@ -36,6 +36,16 @@ public class Industry implements Serializable {
 	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "industry")
 	private Set<Company> companies = new HashSet<Company>();
 
+	
+	public Industry() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Industry(String description) {
+		super();
+		this.description = description;
+	}
+	
 	public long getId() {
 		return id;
 	}
@@ -86,6 +96,11 @@ public class Industry implements Serializable {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return this.description;
 	}
 
 }

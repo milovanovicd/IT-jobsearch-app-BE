@@ -20,25 +20,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jobsearch.converter.DozerConverter;
-import com.jobsearch.data.vo.JobGetVO;
-import com.jobsearch.data.vo.JobVO;
-import com.jobsearch.services.JobService;
+import com.jobsearch.data.vo.CompanyVO;
+import com.jobsearch.services.CompanyService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(value = "Job Endpoint", tags = "JobEndpoint")
+@Api(value = "Company Endpoint", tags = "CompanyEndpoint")
 @RestController
-@RequestMapping("/api/jobs")
+@RequestMapping("/api/companies")
 @CrossOrigin(origins="*")
-public class JobController {
+public class CompanyController {
 
 	@Autowired
-	private JobService service;
+	private CompanyService service;
 
-	@ApiOperation(value = "Find all jobs")
+	@ApiOperation(value = "Find all companies")
 	@GetMapping
-	public List<JobGetVO> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
+	public List<CompanyVO> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "12") int limit,
 			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
 
@@ -46,28 +45,28 @@ public class JobController {
 
 		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "name"));
 
-		return DozerConverter.parseListObjects(service.findAll(pageable), JobGetVO.class);
+		return DozerConverter.parseListObjects(service.findAll(pageable), CompanyVO.class);
 	}
 
-	@ApiOperation(value = "Find a specific job by ID")
+	@ApiOperation(value = "Find a specific company by ID")
 	@GetMapping("/{id}")
-	public JobGetVO findById(@PathVariable("id") Long id) {
-		return DozerConverter.parseObject(service.findById(id), JobGetVO.class);
+	public CompanyVO findById(@PathVariable("id") Long id) {
+		return DozerConverter.parseObject(service.findById(id), CompanyVO.class);
 	}
 
-	@ApiOperation(value = "Create a new job")
+	@ApiOperation(value = "Create a new company")
 	@PostMapping()
-	public JobGetVO create(@RequestBody JobVO job) {
-		return service.create(job);
+	public CompanyVO create(@RequestBody CompanyVO companyVo) {
+		return service.create(companyVo);
 	}
 
-	@ApiOperation(value = "Update a specific job")
+	@ApiOperation(value = "Update a specific company")
 	@PutMapping("/{id}")
-	public JobGetVO update(@PathVariable Long id, @RequestBody JobVO jobVo) {
-		return service.update(id, jobVo);
+	public CompanyVO update(@PathVariable Long id, @RequestBody CompanyVO companyVo) {
+		return service.update(id, companyVo);
 	}
 
-	@ApiOperation(value = "Delete a specific job by ID")
+	@ApiOperation(value = "Delete a specific company by ID")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		service.delete(id);

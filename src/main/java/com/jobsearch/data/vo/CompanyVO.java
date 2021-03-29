@@ -16,10 +16,11 @@ public class CompanyVO implements Serializable {
 
 	private long id;
 	private String name;
+	private String description;
 	private String location;
 	private int noOfEmployees;
 	private Set<CompanyJobVO> jobs = new HashSet<CompanyJobVO>();
-	private IndustryVO industry;
+	private String industry;
 
 	public long getId() {
 		return id;
@@ -35,6 +36,14 @@ public class CompanyVO implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getLocation() {
@@ -61,11 +70,11 @@ public class CompanyVO implements Serializable {
 		this.jobs = jobs;
 	}
 
-	public IndustryVO getIndustry() {
+	public String getIndustry() {
 		return industry;
 	}
 
-	public void setIndustry(IndustryVO industry) {
+	public void setIndustry(String industry) {
 		this.industry = industry;
 	}
 
@@ -73,6 +82,7 @@ public class CompanyVO implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((industry == null) ? 0 : industry.hashCode());
 		result = prime * result + ((jobs == null) ? 0 : jobs.hashCode());
@@ -91,6 +101,11 @@ public class CompanyVO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		CompanyVO other = (CompanyVO) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
 		if (id != other.id)
 			return false;
 		if (industry == null) {
@@ -117,5 +132,6 @@ public class CompanyVO implements Serializable {
 			return false;
 		return true;
 	}
+
 	
 }

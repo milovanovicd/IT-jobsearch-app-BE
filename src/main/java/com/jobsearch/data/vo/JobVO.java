@@ -26,6 +26,7 @@ public class JobVO implements Serializable {
 	
 	@NotNull
 	private long companyId;
+	
 	private List<String> technologies;
 
 	public String getName() {

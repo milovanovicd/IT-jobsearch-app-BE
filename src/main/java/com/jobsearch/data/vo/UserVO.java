@@ -14,16 +14,11 @@ public class UserVO implements Serializable {
 	private String username;
 	private String fullName;
 	private String password;
-	
-//	private Candidate candidate;
-
-
 
 	public String getPassword() {
 		return this.password;
 	}
 
-	
 	public String getUsername() {
 		return this.username;
 	}

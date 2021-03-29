@@ -11,6 +11,7 @@ public class JobGetVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private long id;
 	private String name;
 	private String description;
 	private String publishedDate;
@@ -20,6 +21,14 @@ public class JobGetVO implements Serializable {
 	private CompanyVO company;
 	private List<String> technologies;
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	public String getName() {
 		return name;
 	}
