@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import com.jobsearch.data.vo.UserVO;
 import com.jobsearch.exception.InvalidJwtAuthenticationException;
 
 import io.jsonwebtoken.Claims;
@@ -28,7 +29,7 @@ public class JwtTokenProvider {
 	@Value("${security.jwt.token.secret-key:secret}")
 	private String secretKey = "secret";
 
-	@Value("${security.jwt.token.expire-lenght:3600000}")
+	@Value("${security.jwt.token.expire-length:3600000}")
 	private long validityInMilliseconds = 3600000;
 
 
@@ -41,9 +42,11 @@ public class JwtTokenProvider {
 		secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
 	}
 
-	public String createToken(String username, List<String> roles) {
-		Claims claims = Jwts.claims().setSubject(username);
-		claims.put("roles", roles);
+	public String createToken(UserVO user, List<String> roles) {
+		Claims claims = Jwts.claims().setSubject(user.getUsername());
+		claims.put("role", roles);
+		claims.put("company", user.getCompany());
+		claims.put("candidate", user.getCandidate());
 
 		Date now = new Date();
 		Date validity = new Date(now.getTime() + validityInMilliseconds);

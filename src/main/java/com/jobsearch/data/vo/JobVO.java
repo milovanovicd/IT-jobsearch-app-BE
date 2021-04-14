@@ -1,4 +1,4 @@
-package com.jobsearch.data.vo;
+	package com.jobsearch.data.vo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,7 +22,7 @@ public class JobVO implements Serializable {
 	private String position;
 	
 	@NotNull
-	private String seniority;
+	private long seniority;
 	
 	@NotNull
 	private long companyId;
@@ -69,11 +69,11 @@ public class JobVO implements Serializable {
 		this.position = position;
 	}
 
-	public String getSeniority() {
+	public long getSeniority() {
 		return seniority;
 	}
 
-	public void setSeniority(String seniority) {
+	public void setSeniority(long seniority) {
 		this.seniority = seniority;
 	}
 

@@ -56,7 +56,8 @@ public class Company implements Serializable {
 	@JoinColumn(name = "fk_industry")
 	private Industry industry;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "company")
+//	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "company")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company")
 	private Set<Job> jobs = new HashSet<Job>();
 	
 	public long getId() {
@@ -125,8 +126,7 @@ public class Company implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Company [id=" + id + ", user=" + user + ", name=" + name + ", location=" + location + ", noOfEmployees="
-				+ noOfEmployees + ", industry=" + industry + ", jobs=" + jobs + "]";
+		return name;
 	}
 	
 	

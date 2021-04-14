@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 /**
  * @author dejanmilovanovic
  *
@@ -39,9 +40,6 @@ public class User implements UserDetails, Serializable {
 
 	@Column(name = "username", unique = true)
 	private String username;
-
-	@Column(name = "full_name")
-	private String fullName;
 
 	@Column(name = "password")
 	private String password;
@@ -64,11 +62,11 @@ public class User implements UserDetails, Serializable {
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "user", optional = true)
 	private Candidate candidate;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_permission", 
 	joinColumns = { @JoinColumn(name = "id_user") }, 
 	inverseJoinColumns = { @JoinColumn(name = "id_permission") })
-	private List<Permission> permissions = new ArrayList<>();
+	private List<Permission> permissions;
 
 	public List<String> getRoles() {
 		List<String> roles = new ArrayList<String>();
@@ -78,7 +76,6 @@ public class User implements UserDetails, Serializable {
 		return roles;
 	}
 
-	//Samo proveri koja je razlika izmedju getRoles i getAuthorities
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> list = new ArrayList<>();
@@ -126,14 +123,6 @@ public class User implements UserDetails, Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public List<Permission> getPermissions() {
@@ -184,5 +173,40 @@ public class User implements UserDetails, Serializable {
 		this.candidate = candidate;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((password == null) ? 0 : password.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id != other.id)
+			return false;
+		if (password == null) {
+			if (other.password != null)
+				return false;
+		} else if (!password.equals(other.password))
+			return false;
+		if (username == null) {
+			if (other.username != null)
+				return false;
+		} else if (!username.equals(other.username))
+			return false;
+		return true;
+	}
+	
+	
 
 }

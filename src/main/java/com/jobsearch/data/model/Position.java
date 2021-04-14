@@ -32,7 +32,7 @@ public class Position implements Serializable{
 	@Column(name = "description")
 	private String description;
 	
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "position")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "position")
 	private Set<Job> jobs = new HashSet<Job>();
 
 	public Position() {

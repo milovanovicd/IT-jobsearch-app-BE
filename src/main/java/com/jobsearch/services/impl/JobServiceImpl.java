@@ -60,7 +60,7 @@ public class JobServiceImpl implements JobService {
 	public JobGetVO create(JobVO job) {
 		Position optionalPosition = positionRepository.findByDescription(job.getPosition());
 
-		Seniority optionalSeniority = seniorityRepository.findByDescription(job.getSeniority());
+		Optional<Seniority> optionalSeniority = seniorityRepository.findById(job.getSeniority());
 
 		// Optional sluzi kao wrapper, gde ako ne nadje iz baze entitet, ne puca program
 		// ako uzmes obican Entity.class, onda ce puci program ako ne nadje u bazi
@@ -76,11 +76,8 @@ public class JobServiceImpl implements JobService {
 			entity.setPosition(optionalPosition);
 		}
 
-		if (optionalSeniority == null) {
-			Seniority newSeniority = seniorityRepository.save(new Seniority(job.getSeniority()));
-			entity.setSeniority(newSeniority);
-		} else {
-			entity.setSeniority(optionalSeniority);
+		if (optionalSeniority.isPresent()) {
+			entity.setSeniority(optionalSeniority.get());
 		}
 
 		if (optionalCompany.isPresent()) {
@@ -121,7 +118,7 @@ public class JobServiceImpl implements JobService {
 	public JobGetVO update(Long id, JobVO job) {
 		Position optionalPosition = positionRepository.findByDescription(job.getPosition());
 
-		Seniority optionalSeniority = seniorityRepository.findByDescription(job.getSeniority());
+		Optional<Seniority> optionalSeniority = seniorityRepository.findById(job.getSeniority());
 
 		// Optional sluzi kao wrapper, gde ako ne nadje iz baze entitet, ne puca program
 		// ako uzmes obican Entity.class, onda ce puci program ako ne nadje u bazi
@@ -137,12 +134,10 @@ public class JobServiceImpl implements JobService {
 			entity.setPosition(optionalPosition);
 		}
 
-		if (optionalSeniority == null) {
-			Seniority newSeniority = seniorityRepository.save(new Seniority(job.getSeniority()));
-			entity.setSeniority(newSeniority);
-		} else {
-			entity.setSeniority(optionalSeniority);
+		if (optionalSeniority.isPresent()) {
+			entity.setSeniority(optionalSeniority.get());
 		}
+	
 
 		if (optionalCompany.isPresent()) {
 			entity.setCompany(optionalCompany.get());
@@ -179,11 +174,15 @@ public class JobServiceImpl implements JobService {
 		return DozerConverter.parseObject(repository.save(entity), JobGetVO.class);
 	}
 
-	public void delete(Long id) {
-		Job entity = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
-
-		repository.delete(entity);
+	public void delete(Job job) {
+		
+		job.setCompany(null);
+		job.setPosition(null);
+		job.setSeniority(null);
+		job.setTechnologies(null);
+		
+		repository.deleteJob(job.getId());
+//		repository.deleteById(job.getId());
 	}
 
 }

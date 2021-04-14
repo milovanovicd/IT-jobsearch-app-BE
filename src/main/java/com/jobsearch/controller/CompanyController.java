@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +25,10 @@ import com.jobsearch.services.CompanyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+
 @Api(value = "Company Endpoint", tags = "CompanyEndpoint")
 @RestController
 @RequestMapping("/api/companies")
-@CrossOrigin(origins="*")
 public class CompanyController {
 
 	@Autowired

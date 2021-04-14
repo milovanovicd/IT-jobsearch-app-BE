@@ -1,6 +1,7 @@
 package com.jobsearch.data.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author dejanmilovanovic
@@ -15,6 +16,10 @@ public class CompanyJobVO implements Serializable {
 	private String description;
 	private String publishedDate;
 	private String deadlineDate;
+	private String position;
+	private String seniority;
+	private String company;
+	private List<String> technologies;
 
 	public long getId() {
 		return id;
@@ -55,13 +60,45 @@ public class CompanyJobVO implements Serializable {
 	public void setDeadlineDate(String deadlineDate) {
 		this.deadlineDate = deadlineDate;
 	}
+	
+	
+	public String getPosition() {
+		return position;
+	}
+
+	public void setPosition(String position) {
+		this.position = position;
+	}
+
+	public String getSeniority() {
+		return seniority;
+	}
+
+	public void setSeniority(String seniority) {
+		this.seniority = seniority;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public List<String> getTechnologies() {
+		return technologies;
+	}
+
+	public void setTechnologies(List<String> technologies) {
+		this.technologies = technologies;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((deadlineDate == null) ? 0 : deadlineDate.hashCode());
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((publishedDate == null) ? 0 : publishedDate.hashCode());
@@ -77,15 +114,10 @@ public class CompanyJobVO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		CompanyJobVO other = (CompanyJobVO) obj;
-		if (deadlineDate == null) {
-			if (other.deadlineDate != null)
+		if (company == null) {
+			if (other.company != null)
 				return false;
-		} else if (!deadlineDate.equals(other.deadlineDate))
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
+		} else if (!company.equals(other.company))
 			return false;
 		if (id != other.id)
 			return false;
@@ -101,6 +133,5 @@ public class CompanyJobVO implements Serializable {
 			return false;
 		return true;
 	}
-
 	
 }

@@ -32,7 +32,8 @@ public class Seniority implements Serializable {
 	@Column(name = "description")
 	private String description;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "seniority")
+//	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "seniority")
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "seniority")
 	private Set<Job> jobs = new HashSet<Job>();
 
 	public Seniority() {

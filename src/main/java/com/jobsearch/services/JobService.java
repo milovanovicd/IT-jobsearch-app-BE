@@ -13,5 +13,5 @@ public interface JobService {
 	public Job findById(Long id);
 	public JobGetVO create(JobVO job);
 	public JobGetVO update(Long id, JobVO job);
-	public void delete(Long id);
+	public void delete(Job job);
 }

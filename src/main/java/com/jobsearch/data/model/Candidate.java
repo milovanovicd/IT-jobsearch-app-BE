@@ -32,6 +32,9 @@ public class Candidate implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_user")
 	private User user;
+	
+	@Column(name = "full_name")
+	private String fullName;
 
 	@Column(name = "age")
 	private int age;
@@ -55,6 +58,14 @@ public class Candidate implements Serializable {
 		this.user = user;
 	}
 
+	public String getFullName() {
+		return fullName;
+	}
+	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
+	
 	public int getAge() {
 		return age;
 	}
@@ -70,13 +81,14 @@ public class Candidate implements Serializable {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + age;
+		result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
@@ -98,6 +110,11 @@ public class Candidate implements Serializable {
 			return false;
 		if (age != other.age)
 			return false;
+		if (fullName == null) {
+			if (other.fullName != null)
+				return false;
+		} else if (!fullName.equals(other.fullName))
+			return false;
 		if (id != other.id)
 			return false;
 		if (user == null) {
@@ -107,5 +124,8 @@ public class Candidate implements Serializable {
 			return false;
 		return true;
 	}
+
+	
+	
 
 }
