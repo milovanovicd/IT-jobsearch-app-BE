@@ -2,6 +2,8 @@ package com.jobsearch.services.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -15,29 +17,30 @@ import com.jobsearch.repository.UserRepository;
 import com.jobsearch.services.UserService;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserDetailsService, UserService {
-	
+
 	@Autowired
 	UserRepository repository;
-	
-	public UserServiceImpl() {}
-	
+
+	public UserServiceImpl() {
+	}
+
 	public UserServiceImpl(UserRepository repository) {
 		super();
 		this.repository = repository;
-		
+
 	}
-	
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		var user = repository.findByUsername(username);
-		if(user != null) {
+		if (user != null) {
 			return user;
 		} else {
-			throw new UsernameNotFoundException("Username "+ username + " not found!");
+			throw new UsernameNotFoundException("Username " + username + " not found!");
 		}
-		
+
 	}
 
 	@Override
@@ -47,8 +50,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public User findById(Long id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
+		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
 	}
 
 }

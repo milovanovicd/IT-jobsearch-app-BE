@@ -86,6 +86,11 @@ public class User implements UserDetails, Serializable {
         
         return list;
 	}
+	
+    public User() {
+        super();
+        this.enabled=false;
+    }
 
 	@Override
 	public String getPassword() {

@@ -32,8 +32,6 @@ public class Company implements Serializable {
 	@Column(name = "id")
 	private long id;
 
-	// Pogledaj sta se desava kada postavis CascadeType.ALL
-	// Ako brisem Company brisem i Usera
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_user")
 	private User user;
@@ -56,7 +54,6 @@ public class Company implements Serializable {
 	@JoinColumn(name = "fk_industry")
 	private Industry industry;
 
-//	@OneToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "company")
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "company")
 	private Set<Job> jobs = new HashSet<Job>();
 	

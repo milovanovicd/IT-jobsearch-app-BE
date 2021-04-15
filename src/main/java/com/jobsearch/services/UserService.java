@@ -8,5 +8,6 @@ import com.jobsearch.data.model.User;
 
 public interface UserService {
 	public List<User> findAll(Pageable pageable);
+
 	public User findById(Long id);
 }

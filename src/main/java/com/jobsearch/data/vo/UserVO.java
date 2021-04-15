@@ -2,6 +2,10 @@ package com.jobsearch.data.vo;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotEmpty;
+
+import com.sun.istack.NotNull;
+
 /**
  * @author dejanmilovanovic
  *
@@ -11,13 +15,16 @@ public class UserVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private long id;
+	
+	@NotNull
+    @NotEmpty
 	private String username;
+	
+	@NotNull
+    @NotEmpty
+	private String password;
 	private UserCompanyVO company;
 	private UserCandidateVO candidate;
-
-	public String getUsername() {
-		return this.username;
-	}
 
 	public long getId() {
 		return id;
@@ -27,8 +34,20 @@ public class UserVO implements Serializable {
 		this.id = id;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public UserCompanyVO getCompany() {
@@ -74,5 +93,7 @@ public class UserVO implements Serializable {
 			return false;
 		return true;
 	}
+	
+	
 
 }

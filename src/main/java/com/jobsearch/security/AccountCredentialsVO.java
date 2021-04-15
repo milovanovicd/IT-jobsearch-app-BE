@@ -5,7 +5,8 @@ import java.io.Serializable;
 public class AccountCredentialsVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
+	private String accountType;
 	private String username;
 	private String password;
 
@@ -23,6 +24,14 @@ public class AccountCredentialsVO implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
 	}
 
 	@Override
