@@ -1,11 +1,8 @@
 package com.jobsearch.services.impl;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -41,11 +38,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			throw new UsernameNotFoundException("Username " + username + " not found!");
 		}
 
-	}
-
-	@Override
-	public List<User> findAll(Pageable pageable) {
-		return repository.findAll(pageable).getContent();
 	}
 
 	@Override

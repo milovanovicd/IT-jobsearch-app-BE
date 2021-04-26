@@ -7,7 +7,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.jobsearch.security.jwt.JwtConfigurer;
@@ -39,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 			.authorizeRequests()
-			.antMatchers("/auth/**", "/api-docs/**", "/swagger-ui.html**").permitAll()
+			.antMatchers("/auth/**","/api/candidates/**", "/api/companies/**", "/api/metadata/**", "/api-docs/**", "/swagger-ui.html**").permitAll()
 			.antMatchers("/api/**").authenticated()
 			.antMatchers("/users").denyAll()
 		.and()
