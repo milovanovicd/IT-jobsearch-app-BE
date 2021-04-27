@@ -2,8 +2,10 @@ package com.jobsearch.services.impl;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -23,11 +25,13 @@ import org.springframework.stereotype.Service;
 import com.jobsearch.converter.DozerConverter;
 import com.jobsearch.data.model.Candidate;
 import com.jobsearch.data.model.Company;
+import com.jobsearch.data.model.Permission;
 import com.jobsearch.data.model.User;
 import com.jobsearch.data.model.VerificationToken;
 import com.jobsearch.data.vo.UserVO;
 import com.jobsearch.repository.CandidateRepository;
 import com.jobsearch.repository.CompanyRepository;
+import com.jobsearch.repository.PermissionRepository;
 import com.jobsearch.repository.UserRepository;
 import com.jobsearch.repository.VerificationTokenRepository;
 import com.jobsearch.security.AccountCredentialsVO;
@@ -56,6 +60,9 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	VerificationTokenRepository verificationTokenRepository;
+	
+	@Autowired
+	PermissionRepository permissionRepository;
 
 	@Autowired
 	EmailSenderService emailSenderService;
@@ -99,24 +106,31 @@ public class AuthServiceImpl implements AuthService {
 			return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
 		} else {
 
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
 			String encodedPassword = encoder.encode(data.getPassword());
 
 			User newUser = new User();
 
 			newUser.setUsername(data.getUsername());
 			newUser.setPassword(encodedPassword);
+			newUser.setAccountNonExpired(true);
+			newUser.setAccountNonLocked(true);
+			newUser.setCredentialsNonExpired(true);
 			
-			System.out.println(data.getAccountType());
+			List<Permission> permissionsList = new ArrayList<Permission>();
 
 			if (data.getAccountType().equalsIgnoreCase("company")) {
 				Company company = new Company();
 				company.setUser(newUser);
 				newUser.setCompany(company);
+				permissionsList.add(permissionRepository.findByDescription("COMPANY"));
+				newUser.setPermissions(permissionsList);
 			} else {
 				Candidate candidate = new Candidate();
 				candidate.setUser(newUser);
 				newUser.setCandidate(candidate);
+				permissionsList.add(permissionRepository.findByDescription("CANDIDATE"));
+				newUser.setPermissions(permissionsList);
 			}
 
 			userRepository.save(newUser);
