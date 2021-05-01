@@ -14,6 +14,7 @@ public class CandidateVO implements Serializable {
 	private String fullName;
 	private int age;
 	private String address;
+	private String resume;
 
 	public CandidateVO() {
 	}
@@ -48,6 +49,14 @@ public class CandidateVO implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getResume() {
+		return resume;
+	}
+
+	public void setResume(String resume) {
+		this.resume = resume;
 	}
 
 	@Override

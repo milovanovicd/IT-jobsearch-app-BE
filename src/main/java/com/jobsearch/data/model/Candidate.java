@@ -41,6 +41,9 @@ public class Candidate implements Serializable {
 
 	@Column(name = "address")
 	private String address;
+	
+	@Column(name = "resume", columnDefinition = "varchar(255) default null")
+	private String resume;
 
 	public long getId() {
 		return id;
@@ -82,13 +85,18 @@ public class Candidate implements Serializable {
 		this.address = address;
 	}
 
+	public String getResume() {
+		return resume;
+	}
+
+	public void setResume(String resume) {
+		this.resume = resume;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
-		result = prime * result + age;
-		result = prime * result + ((fullName == null) ? 0 : fullName.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
@@ -103,18 +111,6 @@ public class Candidate implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Candidate other = (Candidate) obj;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
-		if (age != other.age)
-			return false;
-		if (fullName == null) {
-			if (other.fullName != null)
-				return false;
-		} else if (!fullName.equals(other.fullName))
-			return false;
 		if (id != other.id)
 			return false;
 		if (user == null) {
@@ -124,8 +120,4 @@ public class Candidate implements Serializable {
 			return false;
 		return true;
 	}
-
-	
-	
-
 }
