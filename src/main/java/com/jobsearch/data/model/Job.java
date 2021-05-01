@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -60,6 +62,9 @@ public class Job implements Serializable {
 	@JoinTable(name = "job_technologies", joinColumns = { @JoinColumn(name = "id_job") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_technology") })
 	private List<Technology> technologies = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "job")
+	Set<JobApplication> jobApplications;
 
 	public long getId() {
 		return id;
@@ -131,6 +136,14 @@ public class Job implements Serializable {
 
 	public void setTechnologies(List<Technology> technologies) {
 		this.technologies = technologies;
+	}
+
+	public Set<JobApplication> getJobApplications() {
+		return jobApplications;
+	}
+
+	public void setJobApplications(Set<JobApplication> jobApplications) {
+		this.jobApplications = jobApplications;
 	}
 
 	@Override

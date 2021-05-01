@@ -1,7 +1,8 @@
-	package com.jobsearch.data.vo;
+package com.jobsearch.data.vo;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
@@ -28,6 +29,7 @@ public class JobVO implements Serializable {
 	private long companyId;
 	
 	private List<String> technologies;
+	private Set<JobApplicationVO> jobApplications;
 
 	public String getName() {
 		return name;
@@ -92,6 +94,14 @@ public class JobVO implements Serializable {
 	public void setTechnologies(List<String> technologies) {
 		this.technologies = technologies;
 	}
+	
+	public Set<JobApplicationVO> getJobApplications() {
+		return jobApplications;
+	}
+
+	public void setJobApplications(Set<JobApplicationVO> jobApplications) {
+		this.jobApplications = jobApplications;
+	}
 
 	@Override
 	public String toString() {
@@ -99,6 +109,45 @@ public class JobVO implements Serializable {
 				+ ", deadlineDate=" + deadlineDate + ", position=" + position + ", seniority=" + seniority
 				+ ", companyId=" + companyId + ", technologies=" + technologies + "]";
 	}
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (companyId ^ (companyId >>> 32));
+		result = prime * result + ((deadlineDate == null) ? 0 : deadlineDate.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((publishedDate == null) ? 0 : publishedDate.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		JobVO other = (JobVO) obj;
+		if (companyId != other.companyId)
+			return false;
+		if (deadlineDate == null) {
+			if (other.deadlineDate != null)
+				return false;
+		} else if (!deadlineDate.equals(other.deadlineDate))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (publishedDate == null) {
+			if (other.publishedDate != null)
+				return false;
+		} else if (!publishedDate.equals(other.publishedDate))
+			return false;
+		return true;
+	}
 	
 }

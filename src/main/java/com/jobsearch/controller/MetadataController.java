@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jobsearch.data.vo.MetadataVo;
+import com.jobsearch.data.vo.MetadataVO;
 import com.jobsearch.services.MetadataService;
 
 import io.swagger.annotations.Api;
@@ -21,7 +21,7 @@ public class MetadataController {
 
 	@ApiOperation(value = "Get metadata")
 	@GetMapping
-	public MetadataVo findAll() {
+	public MetadataVO findAll() {
 		return this.service.getMetadata();
 	}
 

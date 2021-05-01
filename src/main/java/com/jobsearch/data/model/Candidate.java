@@ -1,6 +1,7 @@
 package com.jobsearch.data.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -44,6 +46,9 @@ public class Candidate implements Serializable {
 	
 	@Column(name = "resume", columnDefinition = "varchar(255) default null")
 	private String resume;
+	
+	@OneToMany(mappedBy = "candidate")
+    Set<JobApplication> jobApplications;
 
 	public long getId() {
 		return id;
@@ -91,6 +96,14 @@ public class Candidate implements Serializable {
 
 	public void setResume(String resume) {
 		this.resume = resume;
+	}
+
+	public Set<JobApplication> getJobApplications() {
+		return jobApplications;
+	}
+
+	public void setJobApplications(Set<JobApplication> jobApplications) {
+		this.jobApplications = jobApplications;
 	}
 
 	@Override

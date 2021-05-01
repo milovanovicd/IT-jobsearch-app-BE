@@ -1,6 +1,7 @@
 package com.jobsearch.data.vo;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author dejanmilovanovic
@@ -15,6 +16,7 @@ public class CandidateVO implements Serializable {
 	private int age;
 	private String address;
 	private String resume;
+	private Set<JobApplicationVO> jobApplications;
 
 	public CandidateVO() {
 	}
@@ -57,6 +59,14 @@ public class CandidateVO implements Serializable {
 
 	public void setResume(String resume) {
 		this.resume = resume;
+	}
+	
+	public Set<JobApplicationVO> getJobApplications() {
+		return jobApplications;
+	}
+
+	public void setJobApplications(Set<JobApplicationVO> jobApplications) {
+		this.jobApplications = jobApplications;
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import java.util.List;
  * @author dejanmilovanovic
  *
  */
-public class MetadataVo implements Serializable {
+public class MetadataVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

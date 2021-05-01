@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jobsearch.converter.DozerConverter;
 import com.jobsearch.data.model.Job;
+import com.jobsearch.data.vo.JobApplicationVO;
 import com.jobsearch.data.vo.JobGetVO;
 import com.jobsearch.data.vo.JobVO;
 import com.jobsearch.exception.ResourceNotFoundException;
@@ -61,6 +62,13 @@ public class JobController {
 	@PostMapping()
 	public JobGetVO create(@RequestBody JobVO job) {
 		return service.create(job);
+	}
+	
+	@ApiOperation(value = "Apply for a job")
+	@PostMapping("/apply")
+	public JobApplicationVO apply(@RequestBody Long candidateId, @RequestBody Long jobId) {
+//		return service.create(job);
+		return null;
 	}
 
 	@ApiOperation(value = "Update a specific job")

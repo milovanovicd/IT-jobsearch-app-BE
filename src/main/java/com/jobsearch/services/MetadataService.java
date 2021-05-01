@@ -1,8 +1,8 @@
 package com.jobsearch.services;
 
-import com.jobsearch.data.vo.MetadataVo;
+import com.jobsearch.data.vo.MetadataVO;
 
 
 public interface MetadataService {
-	public MetadataVo getMetadata();
+	public MetadataVO getMetadata();
 }

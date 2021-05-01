@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
@@ -24,11 +25,13 @@ public class JobApplication implements Serializable {
 	private JobApplicationId id;
 
 	@ManyToOne
-	@MapsId("job_id")
+	@MapsId("jobId")
+	@JoinColumn(name = "job_id")
 	private Job job;
 
 	@ManyToOne
-	@MapsId("candidate_id")
+	@MapsId("candidateId")
+	@JoinColumn(name = "candidate_id")
 	private Candidate candidate;
 
 	@NotNull

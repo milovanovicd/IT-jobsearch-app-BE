@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.jobsearch.converter.DozerConverter;
 import com.jobsearch.data.vo.IndustryVO;
-import com.jobsearch.data.vo.MetadataVo;
+import com.jobsearch.data.vo.MetadataVO;
 import com.jobsearch.data.vo.PositionVO;
 import com.jobsearch.data.vo.TechnologyVO;
 import com.jobsearch.repository.IndustryRepository;
@@ -26,8 +26,8 @@ public class MetadataServiceImpl implements MetadataService {
 	TechnologyRepository technologyRepository;
 
 	@Override
-	public MetadataVo getMetadata() {
-		var metadata = new MetadataVo();
+	public MetadataVO getMetadata() {
+		var metadata = new MetadataVO();
 		metadata.setIndustries(DozerConverter.parseListObjects(this.industryRepository.findAll(), IndustryVO.class));
 		metadata.setPositions(DozerConverter.parseListObjects(this.positionRepository.findAll(), PositionVO.class));
 		metadata.setTechnologies(DozerConverter.parseListObjects(this.technologyRepository.findAll(), TechnologyVO.class));
