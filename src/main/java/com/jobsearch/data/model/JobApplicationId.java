@@ -28,6 +28,22 @@ public class JobApplicationId implements Serializable {
 		this.candidateId = candidateId;
 	}
 
+	public long getJobId() {
+		return jobId;
+	}
+
+	public void setJobId(long jobId) {
+		this.jobId = jobId;
+	}
+
+	public long getCandidateId() {
+		return candidateId;
+	}
+
+	public void setCandidateId(long candidateId) {
+		this.candidateId = candidateId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -1,7 +1,6 @@
 package com.jobsearch.data.vo;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author dejanmilovanovic
@@ -10,35 +9,41 @@ import java.util.Date;
 public class JobApplicationVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private JobVO job;
-	private CandidateVO candidate;
-	private Date createdOn;
-	
+	private JobApplicationJobVO job;
+	private JobApplicationCandidateVO candidate;
+	private String createdOn;
+
 	public JobApplicationVO() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public JobApplicationVO(JobVO job, CandidateVO candidate, Date createdOn) {
+
+	public JobApplicationVO(JobApplicationJobVO job, JobApplicationCandidateVO candidate, String createdOn) {
 		this.job = job;
 		this.candidate = candidate;
 		this.createdOn = createdOn;
 	}
-	public JobVO getJob() {
+
+	public JobApplicationJobVO getJob() {
 		return job;
 	}
-	public void setJob(JobVO job) {
+
+	public void setJob(JobApplicationJobVO job) {
 		this.job = job;
 	}
-	public CandidateVO getCandidate() {
+
+	public JobApplicationCandidateVO getCandidate() {
 		return candidate;
 	}
-	public void setCandidate(CandidateVO candidate) {
+
+	public void setCandidate(JobApplicationCandidateVO candidate) {
 		this.candidate = candidate;
 	}
-	public Date getCreatedOn() {
+
+	public String getCreatedOn() {
 		return createdOn;
 	}
-	public void setCreatedOn(Date createdOn) {
+
+	public void setCreatedOn(String createdOn) {
 		this.createdOn = createdOn;
 	}
 
@@ -72,6 +77,5 @@ public class JobApplicationVO implements Serializable {
 			return false;
 		return true;
 	}
-
 
 }
