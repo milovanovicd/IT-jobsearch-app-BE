@@ -42,11 +42,20 @@ public class JobController {
 	@GetMapping
 	public List<JobGetVO> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "12") int limit,
-			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
+			@RequestParam(value = "direction", defaultValue = "asc") String direction,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "technologies", required = false) List<String> technologies,
+			@RequestParam(value = "positions", required = false) List<String> positions,
+			@RequestParam(value = "seniorities", required = false) List<String> seniorities) {
+	
 
 		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 
 		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "name"));
+		
+		if(name != null || technologies != null || positions != null || seniorities != null) {
+			return DozerConverter.parseListObjects(service.searchAll(pageable, name, technologies, positions, seniorities), JobGetVO.class);
+		}
 
 		return DozerConverter.parseListObjects(service.findAll(pageable), JobGetVO.class);
 	}

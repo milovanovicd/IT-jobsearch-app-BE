@@ -52,9 +52,8 @@ public class JobServiceImpl implements JobService {
 	}
 
 	public Job findById(Long id) {
-		return repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
-		
+		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
+
 	}
 
 	public JobGetVO create(JobVO job) {
@@ -137,7 +136,6 @@ public class JobServiceImpl implements JobService {
 		if (optionalSeniority.isPresent()) {
 			entity.setSeniority(optionalSeniority.get());
 		}
-	
 
 		if (optionalCompany.isPresent()) {
 			entity.setCompany(optionalCompany.get());
@@ -175,14 +173,59 @@ public class JobServiceImpl implements JobService {
 	}
 
 	public void delete(Job job) {
-		
+
 		job.setCompany(null);
 		job.setPosition(null);
 		job.setSeniority(null);
 		job.setTechnologies(null);
-		
+
 		repository.deleteJob(job.getId());
 //		repository.deleteById(job.getId());
+	}
+
+	@Override
+	public List<Job> searchAll(Pageable pageable, String name, List<String> technologies, List<String> positions, List<String> seniorities) {
+		List<Job> jobs = this.findAll(pageable);
+		List<Job> fillteredList = new ArrayList<Job>();
+
+		for (Job job : jobs) {
+			
+			if(name != null && !job.getName().contains(name)) {
+				continue;
+			}
+			
+
+			if (technologies != null) {
+				boolean techFound = false;
+
+				for (Technology tech : job.getTechnologies()) {
+					if (technologies.contains(tech.getDescription())) {
+						techFound = true;
+						break;
+					}
+				}
+
+				if (!techFound) {
+					continue;
+				}
+			}
+			
+			if (positions != null && positions.contains(job.getPosition().getDescription())) {
+				fillteredList.add(job);
+				continue;
+			}
+
+			if (seniorities != null && seniorities.contains(job.getSeniority().getDescription())) {
+				fillteredList.add(job);
+				continue;
+			}
+			
+			fillteredList.add(job);
+			
+			
+		}
+
+		return fillteredList;
 	}
 
 }

@@ -24,7 +24,7 @@ public class SwaggerConfig implements WebMvcConfigurer{
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-				.apis(RequestHandlerSelectors.basePackage("example.com"))
+				.apis(RequestHandlerSelectors.basePackage("com.jobsearch"))
 				.paths(PathSelectors.any())
 				.build()
 				.apiInfo(apiInfo());
@@ -32,7 +32,7 @@ public class SwaggerConfig implements WebMvcConfigurer{
  
  
     private ApiInfo apiInfo() {
-		return new ApiInfo("RESTful API with SpringBoot 2.4.1", 
+		return new ApiInfo("JobSearch API", 
 				"Some description about my API", 
 				"v1", 
 				"Terms of Service Url", 
