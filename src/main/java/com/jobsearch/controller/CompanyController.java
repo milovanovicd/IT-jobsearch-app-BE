@@ -38,11 +38,19 @@ public class CompanyController {
 	@GetMapping
 	public List<CompanyVO> findAll(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "12") int limit,
-			@RequestParam(value = "direction", defaultValue = "asc") String direction) {
+			@RequestParam(value = "direction", defaultValue = "asc") String direction,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "industries", required = false) List<String> industries,
+			@RequestParam(value = "locations", required = false) List<String> locations,
+			@RequestParam(value = "noOfEmployees", required = false) List<String> noOfEmployees) {
 
 		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
 
 		Pageable pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "name"));
+		
+		if(name != null || industries != null || locations != null || noOfEmployees != null) {
+			return DozerConverter.parseListObjects(service.searchAll(pageable, name, industries, locations, noOfEmployees), CompanyVO.class);
+		}
 
 		return DozerConverter.parseListObjects(service.findAll(pageable), CompanyVO.class);
 	}

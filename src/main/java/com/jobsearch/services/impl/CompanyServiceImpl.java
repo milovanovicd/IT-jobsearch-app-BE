@@ -1,5 +1,6 @@
 package com.jobsearch.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import com.jobsearch.repository.IndustryRepository;
 import com.jobsearch.services.CompanyService;
 
 @Service
-public class CompanyServiceImpl implements CompanyService{
+public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	CompanyRepository repository;
@@ -26,12 +27,78 @@ public class CompanyServiceImpl implements CompanyService{
 
 	public List<Company> findAll(Pageable pageable) {
 		return repository.findAll(pageable).getContent();
+	}
 
+	@Override
+	public List<Company> searchAll(Pageable pageable, String name, List<String> industries, List<String> locations,
+			List<String> noOfEmployees) {
+		List<Company> companies = this.findAll(pageable);
+		List<Company> fillteredList = new ArrayList<Company>();
+		int matches = 0;
+
+		for (Company company : companies) {
+
+			if (name != null && !company.getName().contains(name)) {
+				continue;
+			}
+			
+			if(name !=null ) {
+				matches++;
+			}
+			
+
+			if (noOfEmployees != null) {
+				boolean found = false;
+
+				for (String no : noOfEmployees) {
+					int from = -1;
+					int to = -1;
+
+					if (no.endsWith("+")) {
+						from = Integer.parseInt(no.substring(0, no.length() - 1));
+					} else {
+						String[] limits = no.split("-");
+						from = Integer.parseInt(limits[0]);
+						to = Integer.parseInt(limits[1]);
+						;
+					}
+
+					if ((to == -1 && company.getNoOfEmployees() >= from)
+							|| (company.getNoOfEmployees() >= from && company.getNoOfEmployees() <= to)) {
+						found = true;
+						break;
+					}
+				}
+
+				if (!found) {
+					continue;
+				}
+				
+				matches++;
+			}
+
+			if (industries != null && industries.contains(company.getIndustry().getDescription())) {
+				fillteredList.add(company);
+				continue;
+			}
+
+			if (locations != null && locations.contains(company.getLocation())) {
+				fillteredList.add(company);
+				continue;
+			}
+			
+			if( matches > 0) {
+				fillteredList.add(company);
+			}
+
+
+		}
+
+		return fillteredList;
 	}
 
 	public Company findById(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
-
 	}
 
 	public CompanyVO create(CompanyVO company) {

@@ -187,6 +187,7 @@ public class JobServiceImpl implements JobService {
 	public List<Job> searchAll(Pageable pageable, String name, List<String> technologies, List<String> positions, List<String> seniorities) {
 		List<Job> jobs = this.findAll(pageable);
 		List<Job> fillteredList = new ArrayList<Job>();
+		int matches = 0;
 
 		for (Job job : jobs) {
 			
@@ -194,6 +195,9 @@ public class JobServiceImpl implements JobService {
 				continue;
 			}
 			
+			if(name !=null ) {
+				matches++;
+			}
 
 			if (technologies != null) {
 				boolean techFound = false;
@@ -208,6 +212,8 @@ public class JobServiceImpl implements JobService {
 				if (!techFound) {
 					continue;
 				}
+				
+				matches++;
 			}
 			
 			if (positions != null && positions.contains(job.getPosition().getDescription())) {
@@ -220,7 +226,9 @@ public class JobServiceImpl implements JobService {
 				continue;
 			}
 			
-			fillteredList.add(job);
+			if( matches > 0) {
+				fillteredList.add(job);
+			}
 			
 			
 		}
