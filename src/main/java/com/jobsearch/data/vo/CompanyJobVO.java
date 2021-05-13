@@ -2,6 +2,7 @@ package com.jobsearch.data.vo;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author dejanmilovanovic
@@ -20,6 +21,7 @@ public class CompanyJobVO implements Serializable {
 	private String seniority;
 	private String company;
 	private List<String> technologies;
+	private Set<JobApplicationVO> jobApplications;
 
 	public long getId() {
 		return id;
@@ -92,6 +94,14 @@ public class CompanyJobVO implements Serializable {
 
 	public void setTechnologies(List<String> technologies) {
 		this.technologies = technologies;
+	}
+	
+	public Set<JobApplicationVO> getJobApplications() {
+		return jobApplications;
+	}
+
+	public void setJobApplications(Set<JobApplicationVO> jobApplications) {
+		this.jobApplications = jobApplications;
 	}
 
 	@Override
