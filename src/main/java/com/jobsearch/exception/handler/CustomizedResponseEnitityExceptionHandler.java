@@ -14,6 +14,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.jobsearch.exception.ExceptionResponse;
 import com.jobsearch.exception.InvalidJwtAuthenticationException;
+import com.jobsearch.exception.MyBadRequestException;
+import com.jobsearch.exception.MyFileNotFoundException;
 import com.jobsearch.exception.ResourceNotFoundException;
 
 
@@ -21,14 +23,14 @@ import com.jobsearch.exception.ResourceNotFoundException;
 @RestController
 public class CustomizedResponseEnitityExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(InvalidJwtAuthenticationException.class)
+	@ExceptionHandler({InvalidJwtAuthenticationException.class, MyBadRequestException.class})
 	public final ResponseEntity<ExceptionResponse> handleInvalidJwtAuthenticationException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false));
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(ResourceNotFoundException.class)
+	@ExceptionHandler({ResourceNotFoundException.class, MyFileNotFoundException.class})
 	public final ResponseEntity<ExceptionResponse> handleNotFoundException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(),
 				request.getDescription(false));

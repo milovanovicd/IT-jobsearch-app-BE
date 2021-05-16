@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +27,7 @@ import com.jobsearch.data.model.User;
 import com.jobsearch.data.model.VerificationToken;
 import com.jobsearch.data.vo.UserVO;
 import com.jobsearch.exception.InvalidJwtAuthenticationException;
+import com.jobsearch.exception.MyBadRequestException;
 import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.CandidateRepository;
 import com.jobsearch.repository.CompanyRepository;
@@ -38,7 +38,6 @@ import com.jobsearch.security.AccountCredentialsVO;
 import com.jobsearch.security.jwt.JwtTokenProvider;
 import com.jobsearch.services.AuthService;
 import com.jobsearch.services.EmailSenderService;
-
 
 @Service
 @Transactional
@@ -61,27 +60,26 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	VerificationTokenRepository verificationTokenRepository;
-	
+
 	@Autowired
 	PermissionRepository permissionRepository;
 
 	@Autowired
 	EmailSenderService emailSenderService;
-	
 
 	@Override
 	public ResponseEntity<?> signin(AccountCredentialsVO data) {
 		try {
 			var username = data.getUsername();
 			var password = data.getPassword();
-			
+
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
 			var user = userRepository.findByUsername(username);
 			var userVo = DozerConverter.parseObject(user, UserVO.class);
 
 			var token = "";
-			
+
 			if (user != null && user.isEnabled()) {
 				token = tokenProvider.createToken(userVo, user.getRoles());
 			} else {
@@ -101,11 +99,12 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public ResponseEntity<Boolean> registerUser(AccountCredentialsVO data) {
+	public ResponseEntity registerUser(AccountCredentialsVO data) {
+
 		User existingUser = userRepository.findByUsername(data.getUsername());
 
 		if (existingUser != null) {
-			return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
+			throw new MyBadRequestException("Username already exists. Try to sign in or try different one.");
 		} else {
 
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
@@ -118,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
 			newUser.setAccountNonExpired(true);
 			newUser.setAccountNonLocked(true);
 			newUser.setCredentialsNonExpired(true);
-			
+
 			List<Permission> permissionsList = new ArrayList<Permission>();
 
 			if (data.getAccountType().equalsIgnoreCase("company")) {
@@ -149,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
 
 			emailSenderService.sendEmail(mailMessage);
 
-			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+			return ok("Registration successful!");
 		}
 	}
 
