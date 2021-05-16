@@ -3,6 +3,7 @@ package com.jobsearch.services.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import com.jobsearch.data.model.Company;
 import com.jobsearch.data.model.Job;
 import com.jobsearch.data.model.Position;
 import com.jobsearch.data.model.Seniority;
+import com.jobsearch.data.model.Status;
 import com.jobsearch.data.model.Technology;
 import com.jobsearch.data.vo.JobGetVO;
 import com.jobsearch.data.vo.JobVO;
@@ -23,6 +25,7 @@ import com.jobsearch.repository.CompanyRepository;
 import com.jobsearch.repository.JobRepository;
 import com.jobsearch.repository.PositionRepository;
 import com.jobsearch.repository.SeniorityRepository;
+import com.jobsearch.repository.StatusRepository;
 import com.jobsearch.repository.TechnologyRepository;
 import com.jobsearch.services.JobService;
 
@@ -43,13 +46,26 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	TechnologyRepository technologyRepository;
+	
+	@Autowired
+	StatusRepository statusRepository;
 
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 
 	public List<Job> findAll(Pageable pageable) {
-		return repository.findAll(pageable).getContent();
-
+		List<Job> allJobs = repository.findAll(pageable).getContent();
+		List<Job> filteredJobs = new ArrayList<Job>();
+		
+		for (Job job : allJobs) {
+			if(job.getStatus().getId() == 1) {
+				filteredJobs.add(job);
+			}
+		}
+		
+		return filteredJobs;
 	}
+	
+	
 
 	public Job findById(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
@@ -61,8 +77,6 @@ public class JobServiceImpl implements JobService {
 
 		Optional<Seniority> optionalSeniority = seniorityRepository.findById(job.getSeniority());
 
-		// Optional sluzi kao wrapper, gde ako ne nadje iz baze entitet, ne puca program
-		// ako uzmes obican Entity.class, onda ce puci program ako ne nadje u bazi
 		Optional<Company> optionalCompany = Optional.ofNullable(companyRepository.findById(job.getCompanyId())
 				.orElseThrow(() -> new ResourceNotFoundException("No record found for this company ID")));
 
@@ -106,6 +120,7 @@ public class JobServiceImpl implements JobService {
 			entity.setPublishedDate(sdf.parse(job.getPublishedDate()));
 			entity.setDeadlineDate(sdf.parse(job.getDeadlineDate()));
 			entity.setTechnologies(repoTechList);
+			entity.setStatus(statusRepository.findByDescription("ACTIVE"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,9 +133,8 @@ public class JobServiceImpl implements JobService {
 		Position optionalPosition = positionRepository.findByDescription(job.getPosition());
 
 		Optional<Seniority> optionalSeniority = seniorityRepository.findById(job.getSeniority());
-
-		// Optional sluzi kao wrapper, gde ako ne nadje iz baze entitet, ne puca program
-		// ako uzmes obican Entity.class, onda ce puci program ako ne nadje u bazi
+		Optional<Status> optionalStatus = statusRepository.findById(job.getStatus());
+		
 		Optional<Company> optionalCompany = Optional.ofNullable(companyRepository.findById(job.getCompanyId())
 				.orElseThrow(() -> new ResourceNotFoundException("No record found for this company ID")));
 
@@ -135,6 +149,10 @@ public class JobServiceImpl implements JobService {
 
 		if (optionalSeniority.isPresent()) {
 			entity.setSeniority(optionalSeniority.get());
+		}
+		
+		if (optionalStatus.isPresent()) {
+			entity.setStatus(optionalStatus.get());
 		}
 
 		if (optionalCompany.isPresent()) {
@@ -178,6 +196,7 @@ public class JobServiceImpl implements JobService {
 		job.setPosition(null);
 		job.setSeniority(null);
 		job.setTechnologies(null);
+		job.setStatus(null);
 
 		repository.deleteJob(job.getId());
 //		repository.deleteById(job.getId());
@@ -191,7 +210,7 @@ public class JobServiceImpl implements JobService {
 
 		for (Job job : jobs) {
 			
-			if(name != null && !job.getName().contains(name)) {
+			if(name != null && !job.getName().toLowerCase().contains(name.toLowerCase())) {
 				continue;
 			}
 			
@@ -234,6 +253,31 @@ public class JobServiceImpl implements JobService {
 		}
 
 		return fillteredList;
+	}
+
+
+
+	@Override
+	public void checkExpireDates() {
+		List<Job> allJobs = repository.findAll();
+		List<Job> expiredJobs = new ArrayList<Job>();
+		
+		Status statusExpired = this.statusRepository.findByDescription("Expired");
+		
+		for (Job job : allJobs) {
+			boolean expired = job.getDeadlineDate().before(new Date());
+			
+		    if (expired == true)
+		    {
+		        job.setStatus(statusExpired);
+		        expiredJobs.add(job);
+		    }
+		}
+		
+		if(!expiredJobs.isEmpty()) {
+			this.repository.saveAll(expiredJobs);
+		}
+		
 	}
 
 }

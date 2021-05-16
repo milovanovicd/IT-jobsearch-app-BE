@@ -69,5 +69,16 @@ public class JobApplicationController {
             throw new ResourceNotFoundException("Something went wrong...");
         }
 	}
+	
+	@ApiOperation(value = "Delete a specific job application by jobID")
+	@DeleteMapping("/{jobId}")
+	public ResponseEntity<?> deleteByJobId(@PathVariable("jobId") Long jobId) {
+		try {
+    		service.deleteByJobId(jobId);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Something went wrong...");
+        }
+	}
 
 }

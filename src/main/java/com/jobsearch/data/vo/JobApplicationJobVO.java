@@ -16,6 +16,7 @@ public class JobApplicationJobVO implements Serializable {
 	private String deadlineDate;
 	private String position;
 	private String seniority;
+	private String status;
 	private JobApplicationCompanyVO company;
 
 	public long getId() {
@@ -64,6 +65,14 @@ public class JobApplicationJobVO implements Serializable {
 
 	public void setSeniority(String seniority) {
 		this.seniority = seniority;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public JobApplicationCompanyVO getCompany() {

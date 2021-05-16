@@ -26,7 +26,11 @@ public class JobVO implements Serializable {
 	private long seniority;
 	
 	@NotNull
+	private long status;
+	
+	@NotNull
 	private long companyId;
+	
 	
 	private List<String> technologies;
 	private Set<JobApplicationVO> jobApplications;
@@ -77,6 +81,14 @@ public class JobVO implements Serializable {
 
 	public void setSeniority(long seniority) {
 		this.seniority = seniority;
+	}
+
+	public long getStatus() {
+		return status;
+	}
+
+	public void setStatus(long status) {
+		this.status = status;
 	}
 
 	public long getCompanyId() {

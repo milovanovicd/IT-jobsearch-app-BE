@@ -59,4 +59,9 @@ public class JobApplicationServiceImpl implements JobApplicationService {
 	public void delete(JobApplication jobApplication) {
 		this.repository.delete(jobApplication);
 	}
+	
+	@Override
+	public void deleteByJobId(long jobId) {
+		this.repository.deleteByIdJobId(jobId);
+	}
 }

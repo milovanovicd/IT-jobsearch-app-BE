@@ -90,5 +90,16 @@ public class JobController {
             throw new ResourceNotFoundException("Something went wrong...");
         }
 	}
+	
+	@ApiOperation(value = "Find a specific job by ID")
+	@PutMapping("/checkExpired")
+	public ResponseEntity<?> checkExpired() {
+		try {
+    		service.checkExpireDates();
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception ex) {
+            throw new ResourceNotFoundException("Something went wrong...");
+        }
+	}
 
 }

@@ -55,6 +55,10 @@ public class Job implements Serializable {
 	private Seniority seniority;
 	
 	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinColumn(name = "fk_status")
+	private Status status;
+	
+	@ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "fk_company")
 	private Company company;
 
@@ -63,7 +67,7 @@ public class Job implements Serializable {
 			@JoinColumn(name = "id_technology") })
 	private List<Technology> technologies = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "job")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
 	Set<JobApplication> jobApplications;
 
 	public long getId() {
@@ -124,6 +128,14 @@ public class Job implements Serializable {
 	
 	public Company getCompany() {
 		return company;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public void setCompany(Company company) {

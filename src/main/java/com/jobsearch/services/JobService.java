@@ -15,4 +15,5 @@ public interface JobService {
 	public JobGetVO create(JobVO job);
 	public JobGetVO update(Long id, JobVO job);
 	public void delete(Job job);
+	public void checkExpireDates();
 }

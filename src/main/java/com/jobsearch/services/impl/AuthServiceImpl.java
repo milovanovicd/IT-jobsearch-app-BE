@@ -11,14 +11,12 @@ import java.util.Map;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +27,8 @@ import com.jobsearch.data.model.Permission;
 import com.jobsearch.data.model.User;
 import com.jobsearch.data.model.VerificationToken;
 import com.jobsearch.data.vo.UserVO;
+import com.jobsearch.exception.InvalidJwtAuthenticationException;
+import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.CandidateRepository;
 import com.jobsearch.repository.CompanyRepository;
 import com.jobsearch.repository.PermissionRepository;
@@ -38,6 +38,7 @@ import com.jobsearch.security.AccountCredentialsVO;
 import com.jobsearch.security.jwt.JwtTokenProvider;
 import com.jobsearch.services.AuthService;
 import com.jobsearch.services.EmailSenderService;
+
 
 @Service
 @Transactional
@@ -66,24 +67,25 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	EmailSenderService emailSenderService;
+	
 
 	@Override
 	public ResponseEntity<?> signin(AccountCredentialsVO data) {
 		try {
 			var username = data.getUsername();
 			var password = data.getPassword();
-
+			
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
 			var user = userRepository.findByUsername(username);
 			var userVo = DozerConverter.parseObject(user, UserVO.class);
 
 			var token = "";
-
-			if (user != null) {
+			
+			if (user != null && user.isEnabled()) {
 				token = tokenProvider.createToken(userVo, user.getRoles());
 			} else {
-				throw new UsernameNotFoundException("Username " + username + " Not Found!");
+				throw new InvalidJwtAuthenticationException("Account with username: " + username + " is not verified!");
 			}
 
 			Map<Object, Object> model = new HashMap<>();
@@ -93,8 +95,8 @@ public class AuthServiceImpl implements AuthService {
 
 			return ok(model);
 
-		} catch (Exception e) {
-			throw new BadCredentialsException("Invalid username/password supplied!");
+		} catch (AuthenticationException e) {
+			throw new ResourceNotFoundException("Invalid username/password supplied!");
 		}
 	}
 

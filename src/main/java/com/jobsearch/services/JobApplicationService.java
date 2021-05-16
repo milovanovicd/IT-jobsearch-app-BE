@@ -9,4 +9,5 @@ public interface JobApplicationService {
 	public JobApplication findById(JobApplicationId id);
 	public JobApplicationVO create(JobApplicationCreateVO jobApplication);
 	public void delete(JobApplication jobApplication);
+	public void deleteByJobId(long jobId);
 }

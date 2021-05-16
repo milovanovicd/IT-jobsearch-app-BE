@@ -19,6 +19,7 @@ public class JobGetVO implements Serializable {
 	private String deadlineDate;
 	private String position;
 	private String seniority;
+	private String status;
 	private CompanyVO company;
 	private List<String> technologies;
 	private Set<JobApplicationVO> jobApplications;
@@ -77,6 +78,14 @@ public class JobGetVO implements Serializable {
 
 	public void setSeniority(String seniority) {
 		this.seniority = seniority;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public CompanyVO getCompany() {

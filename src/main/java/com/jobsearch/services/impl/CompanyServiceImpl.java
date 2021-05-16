@@ -1,7 +1,9 @@
 package com.jobsearch.services.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -11,9 +13,13 @@ import org.springframework.stereotype.Service;
 import com.jobsearch.converter.DozerConverter;
 import com.jobsearch.data.model.Company;
 import com.jobsearch.data.model.Industry;
+import com.jobsearch.data.model.Job;
+import com.jobsearch.data.model.JobApplication;
 import com.jobsearch.data.vo.CompanyVO;
 import com.jobsearch.repository.CompanyRepository;
 import com.jobsearch.repository.IndustryRepository;
+import com.jobsearch.repository.JobApplicationRepository;
+import com.jobsearch.repository.JobRepository;
 import com.jobsearch.services.CompanyService;
 
 @Service
@@ -24,6 +30,12 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Autowired
 	IndustryRepository industryRepository;
+	
+	@Autowired
+	JobRepository jobRepository;
+	
+	@Autowired
+	JobApplicationRepository jobApplicationRepository;
 
 	public List<Company> findAll(Pageable pageable) {
 		return repository.findAll(pageable).getContent();
@@ -38,7 +50,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 		for (Company company : companies) {
 
-			if (name != null && !company.getName().contains(name)) {
+			if (name != null && !company.getName().toLowerCase().contains(name.toLowerCase())) {
 				continue;
 			}
 			
@@ -144,7 +156,38 @@ public class CompanyServiceImpl implements CompanyService {
 	public void delete(Long id) {
 		Company entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
-
+		
+		Set<Job> companyJobs = entity.getJobs();
+		Set<JobApplication> jobApplications = new HashSet<JobApplication>();
+		
+		for (Job job : companyJobs) {
+			if(!job.getJobApplications().isEmpty()) {
+				jobApplications.addAll(job.getJobApplications());
+				job.setJobApplications(null);
+			}
+			
+			job.setCompany(null);
+			
+			job.getPosition().getJobs().remove(job);
+			job.setPosition(null);
+			
+			job.getSeniority().getJobs().remove(job);
+			job.setSeniority(null);
+			
+			job.setTechnologies(null);
+			
+			job.getStatus().getJobs().remove(job);
+			job.setStatus(null);
+		}
+		
+		entity.setJobs(null);
+		entity.setIndustry(null);
+		entity.setUser(null);
+		
+		jobApplicationRepository.deleteAll(jobApplications);
+		jobRepository.deleteAll(companyJobs);
+		
+		
 		repository.delete(entity);
 	}
 
