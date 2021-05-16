@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.converter.DozerConverter;
@@ -14,6 +13,7 @@ import com.jobsearch.data.vo.JobApplicationCandidateVO;
 import com.jobsearch.data.vo.JobApplicationCreateVO;
 import com.jobsearch.data.vo.JobApplicationJobVO;
 import com.jobsearch.data.vo.JobApplicationVO;
+import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.JobApplicationRepository;
 import com.jobsearch.services.CandidateService;
 import com.jobsearch.services.JobApplicationService;

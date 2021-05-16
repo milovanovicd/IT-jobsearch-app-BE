@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.converter.DozerConverter;
@@ -21,6 +20,7 @@ import com.jobsearch.data.model.Status;
 import com.jobsearch.data.model.Technology;
 import com.jobsearch.data.vo.JobGetVO;
 import com.jobsearch.data.vo.JobVO;
+import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.CompanyRepository;
 import com.jobsearch.repository.JobRepository;
 import com.jobsearch.repository.PositionRepository;

@@ -1,12 +1,12 @@
 package com.jobsearch.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.converter.DozerConverter;
 import com.jobsearch.data.model.Candidate;
 import com.jobsearch.data.vo.CandidateVO;
+import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.CandidateRepository;
 import com.jobsearch.services.CandidateService;
 

@@ -1,4 +1,4 @@
-package com.jobsearch.services.impl;
+	package com.jobsearch.services.impl;
 
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -139,14 +141,31 @@ public class AuthServiceImpl implements AuthService {
 			VerificationToken verificationToken = new VerificationToken(newUser);
 			verificationTokenRepository.save(verificationToken);
 
-			SimpleMailMessage mailMessage = new SimpleMailMessage();
-			mailMessage.setTo(newUser.getUsername());
-			mailMessage.setSubject("Account Registration Verification!");
-			mailMessage.setFrom("office@jobsearch.com");
-			mailMessage.setText("To confirm your account, please click here : "
-					+ "http://localhost:4200/confirm-account?token=" + verificationToken.getVerificationToken());
+			MimeMessage mimeMessage = emailSenderService.getJavaMailSender().createMimeMessage();
+			
+			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+			//mimeMessage.setContent(htmlMsg, "text/html"); /** Use this or below line **/
+			
+			String htmlMsg = "To confirm your account, please click " + 
+			"<a target=\"_blank\" href ="+"http://localhost:4200/confirm-account?token=" + verificationToken.getVerificationToken()+">here</a>";
+			
+			try {
+				helper.setText(htmlMsg, true);
+				helper.setTo(newUser.getUsername());
+				helper.setSubject("Account Registration Verification!");
+				helper.setFrom("office@jobsearch.com");
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			
+//			SimpleMailMessage mailMessage = new SimpleMailMessage();
+//			mailMessage.setTo(newUser.getUsername());
+//			mailMessage.setSubject("Account Registration Verification!");
+//			mailMessage.setFrom("office@jobsearch.com");
+//			mailMessage.setText("To confirm your account, please click here : "
+//					+ "http://localhost:4200/confirm-account?token=" + verificationToken.getVerificationToken());
 
-			emailSenderService.sendEmail(mailMessage);
+			emailSenderService.sendMimeEmail(mimeMessage);
 
 			return ok("Registration successful!");
 		}
