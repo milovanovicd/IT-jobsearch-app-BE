@@ -46,7 +46,7 @@ public class JobServiceImpl implements JobService {
 
 	@Autowired
 	TechnologyRepository technologyRepository;
-	
+
 	@Autowired
 	StatusRepository statusRepository;
 
@@ -55,17 +55,17 @@ public class JobServiceImpl implements JobService {
 	public List<Job> findAll(Pageable pageable) {
 		List<Job> allJobs = repository.findAll(pageable).getContent();
 		List<Job> filteredJobs = new ArrayList<Job>();
-		
-		for (Job job : allJobs) {
-			if(job.getStatus().getId() == 1) {
-				filteredJobs.add(job);
+
+		if (!allJobs.isEmpty() && allJobs != null) {
+			for (Job job : allJobs) {
+				if (job.getStatus() != null && job.getStatus().getId() == 1) {
+					filteredJobs.add(job);
+				}
 			}
 		}
-		
+
 		return filteredJobs;
 	}
-	
-	
 
 	public Job findById(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
@@ -134,7 +134,7 @@ public class JobServiceImpl implements JobService {
 
 		Optional<Seniority> optionalSeniority = seniorityRepository.findById(job.getSeniority());
 		Optional<Status> optionalStatus = statusRepository.findById(job.getStatus());
-		
+
 		Optional<Company> optionalCompany = Optional.ofNullable(companyRepository.findById(job.getCompanyId())
 				.orElseThrow(() -> new ResourceNotFoundException("No record found for this company ID")));
 
@@ -150,7 +150,7 @@ public class JobServiceImpl implements JobService {
 		if (optionalSeniority.isPresent()) {
 			entity.setSeniority(optionalSeniority.get());
 		}
-		
+
 		if (optionalStatus.isPresent()) {
 			entity.setStatus(optionalStatus.get());
 		}
@@ -199,85 +199,85 @@ public class JobServiceImpl implements JobService {
 		job.setStatus(null);
 
 		repository.deleteJob(job.getId());
-//		repository.deleteById(job.getId());
 	}
 
 	@Override
-	public List<Job> searchAll(Pageable pageable, String name, List<String> technologies, List<String> positions, List<String> seniorities) {
+	public List<Job> searchAll(Pageable pageable, String name, List<String> technologies, List<String> positions,
+			List<String> seniorities) {
 		List<Job> jobs = this.findAll(pageable);
 		List<Job> fillteredList = new ArrayList<Job>();
 		int matches = 0;
 
-		for (Job job : jobs) {
-			
-			if(name != null && !job.getName().toLowerCase().contains(name.toLowerCase())) {
-				continue;
-			}
-			
-			if(name !=null ) {
-				matches++;
-			}
+		if (!jobs.isEmpty() && jobs != null) {
+			for (Job job : jobs) {
 
-			if (technologies != null) {
-				boolean techFound = false;
-
-				for (Technology tech : job.getTechnologies()) {
-					if (technologies.contains(tech.getDescription())) {
-						techFound = true;
-						break;
-					}
-				}
-
-				if (!techFound) {
+				if (name != null && !job.getName().toLowerCase().contains(name.toLowerCase())) {
 					continue;
 				}
-				
-				matches++;
-			}
-			
-			if (positions != null && positions.contains(job.getPosition().getDescription())) {
-				fillteredList.add(job);
-				continue;
-			}
 
-			if (seniorities != null && seniorities.contains(job.getSeniority().getDescription())) {
-				fillteredList.add(job);
-				continue;
+				if (name != null) {
+					matches++;
+				}
+
+				if (technologies != null) {
+					boolean techFound = false;
+
+					for (Technology tech : job.getTechnologies()) {
+						if (technologies.contains(tech.getDescription())) {
+							techFound = true;
+							break;
+						}
+					}
+
+					if (!techFound) {
+						continue;
+					}
+
+					matches++;
+				}
+
+				if (positions != null && positions.contains(job.getPosition().getDescription())) {
+					fillteredList.add(job);
+					continue;
+				}
+
+				if (seniorities != null && seniorities.contains(job.getSeniority().getDescription())) {
+					fillteredList.add(job);
+					continue;
+				}
+
+				if (matches > 0) {
+					fillteredList.add(job);
+				}
+
 			}
-			
-			if( matches > 0) {
-				fillteredList.add(job);
-			}
-			
-			
 		}
 
 		return fillteredList;
 	}
 
-
-
 	@Override
 	public void checkExpireDates() {
 		List<Job> allJobs = repository.findAll();
 		List<Job> expiredJobs = new ArrayList<Job>();
-		
+
 		Status statusExpired = this.statusRepository.findByDescription("Expired");
-		
-		for (Job job : allJobs) {
-			boolean expired = job.getDeadlineDate().before(new Date());
-			
-		    if (expired == true)
-		    {
-		        job.setStatus(statusExpired);
-		        expiredJobs.add(job);
-		    }
+
+		if (!allJobs.isEmpty() && allJobs != null) {
+			for (Job job : allJobs) {
+				boolean expired = job.getDeadlineDate().before(new Date());
+
+				if (expired == true) {
+					job.setStatus(statusExpired);
+					expiredJobs.add(job);
+				}
+			}
+
+			if (!expiredJobs.isEmpty()) {
+				this.repository.saveAll(expiredJobs);
+			}
 		}
-		
-		if(!expiredJobs.isEmpty()) {
-			this.repository.saveAll(expiredJobs);
-		}
-		
+
 	}
 
 }

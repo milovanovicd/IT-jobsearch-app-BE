@@ -1,12 +1,15 @@
 package com.jobsearch.data.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -28,6 +31,19 @@ public class Permission implements GrantedAuthority, Serializable{
 	
 	@Column(name = "description")
 	private String description;
+	
+	@ManyToMany(mappedBy = "permissions")
+    private List<User> users = new ArrayList<User>();
+  
+    public void addUser(User user) {
+        this.users.add(user);
+        user.getPermissions().add(this);
+    }
+  
+    public void removeUser(User user) {
+        this.users.remove(user);
+        user.getPermissions().remove(this);
+    }
 
 	@Override
 	public String getAuthority() {

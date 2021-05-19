@@ -1,7 +1,6 @@
 package com.jobsearch.services.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,14 +12,14 @@ import com.jobsearch.converter.DozerConverter;
 import com.jobsearch.data.model.Company;
 import com.jobsearch.data.model.Industry;
 import com.jobsearch.data.model.Job;
-import com.jobsearch.data.model.JobApplication;
 import com.jobsearch.data.vo.CompanyVO;
 import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.CompanyRepository;
 import com.jobsearch.repository.IndustryRepository;
 import com.jobsearch.repository.JobApplicationRepository;
-import com.jobsearch.repository.JobRepository;
 import com.jobsearch.services.CompanyService;
+import com.jobsearch.services.JobService;
+import com.jobsearch.services.UserService;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -32,10 +31,13 @@ public class CompanyServiceImpl implements CompanyService {
 	IndustryRepository industryRepository;
 	
 	@Autowired
-	JobRepository jobRepository;
+	JobService jobService;
 	
 	@Autowired
 	JobApplicationRepository jobApplicationRepository;
+	
+	@Autowired
+	UserService userService;
 
 	public List<Company> findAll(Pageable pageable) {
 		return repository.findAll(pageable).getContent();
@@ -158,37 +160,26 @@ public class CompanyServiceImpl implements CompanyService {
 				.orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
 		
 		Set<Job> companyJobs = entity.getJobs();
-		Set<JobApplication> jobApplications = new HashSet<JobApplication>();
 		
 		for (Job job : companyJobs) {
-			if(!job.getJobApplications().isEmpty()) {
-				jobApplications.addAll(job.getJobApplications());
-				job.setJobApplications(null);
+			
+			if(job.getJobApplications() != null && !job.getJobApplications().isEmpty()) {
+					jobApplicationRepository.deleteByIdJobId(job.getId());
 			}
 			
-			job.setCompany(null);
-			
-			job.getPosition().getJobs().remove(job);
-			job.setPosition(null);
-			
-			job.getSeniority().getJobs().remove(job);
-			job.setSeniority(null);
-			
-			job.setTechnologies(null);
-			
-			job.getStatus().getJobs().remove(job);
-			job.setStatus(null);
+			jobService.delete(job);
 		}
 		
-		entity.setJobs(null);
 		entity.setIndustry(null);
+		
+		Long userId = entity.getUser().getId();
+		
 		entity.setUser(null);
 		
-		jobApplicationRepository.deleteAll(jobApplications);
-		jobRepository.deleteAll(companyJobs);
+		repository.deleteCompany(entity.getId());
 		
+		userService.delete(userId);
 		
-		repository.delete(entity);
 	}
 
 }

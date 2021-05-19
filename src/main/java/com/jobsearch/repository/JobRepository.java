@@ -18,5 +18,10 @@ public interface JobRepository extends JpaRepository<Job, Long>{
 	@Query("delete from Job job WHERE job.id =:id")
 	@Transactional
 	void deleteJob(@Param("id") long id);
+	
+	@Modifying
+	@Query("delete from Job job WHERE job.company.id =:id")
+	@Transactional
+	void deleteByIdCompanyId(@Param("id") long id);
 
 }

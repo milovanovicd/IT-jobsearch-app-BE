@@ -2,11 +2,11 @@
 
 import static org.springframework.http.ResponseEntity.ok;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -120,7 +120,7 @@ public class AuthServiceImpl implements AuthService {
 			newUser.setAccountNonLocked(true);
 			newUser.setCredentialsNonExpired(true);
 
-			List<Permission> permissionsList = new ArrayList<Permission>();
+			Set<Permission> permissionsList = new HashSet<Permission>();
 
 			if (data.getAccountType().equalsIgnoreCase("company")) {
 				Company company = new Company();
@@ -150,12 +150,14 @@ public class AuthServiceImpl implements AuthService {
 			"<a target=\"_blank\" href ="+"http://localhost:4200/confirm-account?token=" + verificationToken.getVerificationToken()+">here</a>";
 			
 			try {
-				helper.setText(htmlMsg, true);
+//				helper.setText(htmlMsg, true);
+				mimeMessage.setContent(htmlMsg, "text/html");
 				helper.setTo(newUser.getUsername());
 				helper.setSubject("Account Registration Verification!");
 				helper.setFrom("office@jobsearch.com");
 			} catch (MessagingException e) {
 				e.printStackTrace();
+				throw new MyBadRequestException("Registration successful! Check your mail.");
 			}
 			
 //			SimpleMailMessage mailMessage = new SimpleMailMessage();
@@ -167,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
 
 			emailSenderService.sendMimeEmail(mimeMessage);
 
-			return ok("Registration successful!");
+			return ok("Registration successful! Check your mail.");
 		}
 	}
 

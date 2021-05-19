@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.jobsearch.data.model.Permission;
 import com.jobsearch.data.model.User;
 import com.jobsearch.repository.UserRepository;
 import com.jobsearch.services.UserService;
@@ -43,6 +44,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Override
 	public User findById(Long id) {
 		return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
+	}
+
+	@Override
+	public void delete(Long id) {
+		User user = this.findById(id);
+		
+		for(Permission p : user.getPermissions()) {
+			p.removeUser(user);
+		}
+		
+		user.setCompany(null);
+		user.setCandidate(null);
+		
+		repository.deleteUser(user.getId());
+		
 	}
 
 }

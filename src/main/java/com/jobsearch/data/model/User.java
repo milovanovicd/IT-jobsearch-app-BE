@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,7 +67,7 @@ public class User implements UserDetails, Serializable {
 	@JoinTable(name = "user_permission", 
 	joinColumns = { @JoinColumn(name = "id_user") }, 
 	inverseJoinColumns = { @JoinColumn(name = "id_permission") })
-	private List<Permission> permissions;
+	private Set<Permission> permissions;
 
 	public List<String> getRoles() {
 		List<String> roles = new ArrayList<String>();
@@ -130,11 +131,11 @@ public class User implements UserDetails, Serializable {
 		this.id = id;
 	}
 
-	public List<Permission> getPermissions() {
+	public Set<Permission> getPermissions() {
 		return permissions;
 	}
 
-	public void setPermissions(List<Permission> permissions) {
+	public void setPermissions(Set<Permission> permissions) {
 		this.permissions = permissions;
 	}
 

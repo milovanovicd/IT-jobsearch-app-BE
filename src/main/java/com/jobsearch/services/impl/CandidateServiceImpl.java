@@ -8,13 +8,21 @@ import com.jobsearch.data.model.Candidate;
 import com.jobsearch.data.vo.CandidateVO;
 import com.jobsearch.exception.ResourceNotFoundException;
 import com.jobsearch.repository.CandidateRepository;
+import com.jobsearch.repository.JobApplicationRepository;
 import com.jobsearch.services.CandidateService;
+import com.jobsearch.services.UserService;
 
 @Service
 public class CandidateServiceImpl implements CandidateService{
 	
 	@Autowired
 	CandidateRepository repository;
+	
+	@Autowired
+	JobApplicationRepository jobApplicationRepository;
+	
+	@Autowired
+	UserService userService;
 
 	@Override
 	public Candidate findById(Long id) {
@@ -37,8 +45,16 @@ public class CandidateServiceImpl implements CandidateService{
 	public void delete(Long id) {
 		Candidate entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("No record found for this ID"));
-
-		repository.delete(entity);
+		
+		Long userId = entity.getUser().getId();
+		
+		entity.setUser(null);
+		
+		jobApplicationRepository.deleteByIdCandidateId(id);
+		
+		repository.deleteCandidate(id);
+		
+		userService.delete(userId);
 		
 	}
 

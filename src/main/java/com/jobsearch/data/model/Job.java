@@ -66,8 +66,8 @@ public class Job implements Serializable {
 	@JoinTable(name = "job_technologies", joinColumns = { @JoinColumn(name = "id_job") }, inverseJoinColumns = {
 			@JoinColumn(name = "id_technology") })
 	private List<Technology> technologies = new ArrayList<>();
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "job")
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "job")
 	Set<JobApplication> jobApplications;
 
 	public long getId() {

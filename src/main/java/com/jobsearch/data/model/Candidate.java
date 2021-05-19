@@ -47,7 +47,7 @@ public class Candidate implements Serializable {
 	@Column(name = "resume", columnDefinition = "varchar(255) default null")
 	private String resume;
 	
-	@OneToMany(mappedBy = "candidate")
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "candidate")
     Set<JobApplication> jobApplications;
 
 	public long getId() {
